@@ -58,6 +58,12 @@ function App() {
     const [ SuTotalDollar, setSuTotalDollar ] = useState(0);
     const [ PHTotalDollar, setPHTotalDollar ] = useState(0);
     const [ totalGrossPay, setTotalGrossPay ] = useState(0);
+    const [ crewCoachAllowance, setCrewCoachAllowance ] = useState(0);
+    const [ IFAAllowance, setIFAAllowance ] = useState(0);
+
+    // Set state for job type and award
+    const [ jobType, setJobType ] = useState("Full time");
+    const [ awardType, setAwardType ] = useState("Level 1");
 
     // Handle hours and minutes being added
     function handleInputChange(event){
@@ -75,28 +81,61 @@ function App() {
           rate: parseFloat(event.target.value)}))
     }
 
+    function handleJobTypeSelection(event){
+        setJobType(event.target.value)
+    }
+
+    function handleAwardTypeSelection(event){
+        setAwardType(event.target.value)
+    }
+
     // Calculate all pay rates based on base rate
     function updateOrdinaryRate(){
         const rate = parseFloat(state.rate);
-        setState(prevState => ({
-            ...prevState,
-            rate: rate,
-            MFOrdRate: rate,
-            MFLNRate: Math.round(((rate * 1.1) + Number.EPSILON) * 100) / 100,
-            MFEMRate: Math.round(((rate * 1.15) + Number.EPSILON) * 100) / 100,
-            MFO1Rate: Math.round(((rate * 1.5) + Number.EPSILON) * 100) / 100,
-            MFO2Rate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
+        console.log(jobType)
+        if(jobType === "Full time" || jobType === "Part time"){
+            setState(prevState => ({
+                ...prevState,
+                rate: rate,
+                MFOrdRate: rate,
+                MFLNRate: Math.round(((rate * 1.1) + Number.EPSILON) * 100) / 100,
+                MFEMRate: Math.round(((rate * 1.15) + Number.EPSILON) * 100) / 100,
+                MFO1Rate: Math.round(((rate * 1.5) + Number.EPSILON) * 100) / 100,
+                MFO2Rate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
 
-            SaOrdRate: Math.round(((rate * 1.25) + Number.EPSILON) * 100) / 100,
-            SaO1Rate: Math.round(((rate * 1.5) + Number.EPSILON) * 100) / 100,
-            SaO2Rate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
-      
-            SuOrdRate: Math.round(((rate * 1.25) + Number.EPSILON) * 100) / 100,
-            SuOTRate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
-            
-            PHOrdRate: Math.round(((rate * 2.25) + Number.EPSILON) * 100) / 100,
-            PHOTRate: Math.round(((rate * 2.5) + Number.EPSILON) * 100) / 100,
-        }))
+                SaOrdRate: Math.round(((rate * 1.25) + Number.EPSILON) * 100) / 100,
+                SaO1Rate: Math.round(((rate * 1.5) + Number.EPSILON) * 100) / 100,
+                SaO2Rate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
+          
+                SuOrdRate: Math.round(((rate * 1.25) + Number.EPSILON) * 100) / 100,
+                SuOTRate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
+                
+                PHOrdRate: Math.round(((rate * 2.25) + Number.EPSILON) * 100) / 100,
+                PHOTRate: Math.round(((rate * 2.5) + Number.EPSILON) * 100) / 100,
+            }))
+        }
+        else {
+            console.log("correct one hit")
+            setState(prevState => ({
+              ...prevState,
+              rate: rate,
+              MFOrdRate: rate * 1.25,
+              MFLNRate: Math.round((((rate * 1.1) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              MFEMRate: Math.round((((rate * 1.15) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              MFO1Rate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              MFO2Rate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+
+              SaOrdRate: Math.round((((rate * 1.25) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              SaO1Rate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              SaO2Rate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+        
+              SuOrdRate: Math.round((((rate * 1.25) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              SuOTRate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              
+              PHOrdRate: Math.round((((rate * 2.25) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              PHOTRate: Math.round((((rate * 2.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+          }))
+        }
     }
 
     // Update total for the week *after* the group totals have been calculated
@@ -145,7 +184,17 @@ function App() {
     return (
       <div className="app">
           <h1>Backpay Calculator</h1>
-          <label>Rate</label><input name="rate" id="rate" onChange={ handleRateChange }></input>
+          <label>Base rate</label><input name="rate" id="rate" onChange={ handleRateChange }></input>
+          <select onChange={ handleJobTypeSelection }>
+            <option>Full time</option>
+            <option>Part time</option>
+            <option>Casual</option>
+          </select>
+          <select onChange={ handleAwardTypeSelection }>
+            <option>Level 1</option>
+            <option>Crew Coach</option>
+            <option>Level 2</option>
+          </select>
           <button onClick={ updateOrdinaryRate }>Submit</button>
           <div className="container">
             <div className="MF">
@@ -209,7 +258,9 @@ function App() {
                     <p>${ PHTotalDollar }</p>
             </div>
             <div>
-              <p>Total gross pay: { totalGrossPay }</p>
+              <p>Total gross pay: ${ totalGrossPay }</p>
+              <p>Crew coach allowance: ${ crewCoachAllowance }</p>
+              <p>IFA allowance: ${ IFAAllowance }</p>
             </div>
           </div>
       </div>
