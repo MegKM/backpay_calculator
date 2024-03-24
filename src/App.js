@@ -294,7 +294,7 @@ function App() {
                   <h4>Overtime 1 - ${ state.MFO1Rate }</h4>
                     <label>Hrs</label><input name="MFO1Hours" onChange={ handleInputChange }></input> 
                     <label>Min</label><input name="MFO1Minutes" onChange={ handleInputChange }></input> 
-                  <h4>Overtime 2 - $ { state.MFO2Rate }</h4>
+                  <h4>Overtime 2 - ${ state.MFO2Rate }</h4>
                     <label>Hrs</label><input name="MFO2Hours" onChange={ handleInputChange }></input>
                     <label>Min</label><input name="MFO2Minutes" onChange={ handleInputChange }></input> 
                   <p>Total M-F: ${ MFTotalDollar }</p>
