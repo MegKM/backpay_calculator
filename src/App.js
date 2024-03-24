@@ -58,6 +58,7 @@ function App() {
     const [ SuTotalDollar, setSuTotalDollar ] = useState(0);
     const [ PHTotalDollar, setPHTotalDollar ] = useState(0);
     const [ totalGrossPay, setTotalGrossPay ] = useState(0);
+    const [ totalHoursWorked, setTotalHoursWorked ] = useState(0);
     const [ crewCoachAllowance, setCrewCoachAllowance ] = useState(0);
     const [ IFAAllowance, setIFAAllowance ] = useState(0);
 
@@ -67,10 +68,17 @@ function App() {
 
     // Handle hours and minutes being added
     function handleInputChange(event){
-      const { name, value } = event.target;
+      let inputValue = parseFloat(event.target.value);
+
+      if(isNaN(inputValue)){
+        console.log("confirmed")
+        inputValue = 0;
+      }
+
+      const { name } = event.target;
       setState(prevState => ({
         ...prevState,
-        [name]: parseFloat(value)}
+        [name]: inputValue }
       ));
     }
 
@@ -98,84 +106,84 @@ function App() {
             setState(prevState => ({
                 ...prevState,
                 rate: rate,
-                MFOrdRate: rate,
-                MFLNRate: Math.round(((rate * 1.1) + Number.EPSILON) * 10000) / 10000,
-                MFEMRate: Math.round(((rate * 1.15) + Number.EPSILON) * 10000) / 10000,
-                MFO1Rate: Math.round(((rate * 1.5) + Number.EPSILON) * 10000) / 10000,
-                MFO2Rate: Math.round(((rate * 2) + Number.EPSILON) * 10000) / 10000,
+                MFOrdRate: Math.round((rate  + Number.EPSILON) * 100) / 100,
+                MFLNRate: Math.round(((rate * 1.1) + Number.EPSILON) * 100) / 100,
+                MFEMRate: Math.round(((rate * 1.15) + Number.EPSILON) * 100) / 100,
+                MFO1Rate: Math.round(((rate * 1.5) + Number.EPSILON) * 100) / 100,
+                MFO2Rate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
 
-                SaOrdRate: Math.round(((rate * 1.25) + Number.EPSILON) * 10000) / 10000,
-                SaO1Rate: Math.round(((rate * 1.5) + Number.EPSILON) * 10000) / 10000,
-                SaO2Rate: Math.round(((rate * 2) + Number.EPSILON) * 10000) / 10000,
+                SaOrdRate: Math.round(((rate * 1.25) + Number.EPSILON) * 100) / 100,
+                SaO1Rate: Math.round(((rate * 1.5) + Number.EPSILON) * 100) / 100,
+                SaO2Rate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
           
-                SuOrdRate: Math.round(((rate * 1.25) + Number.EPSILON) * 10000) / 10000,
-                SuOTRate: Math.round(((rate * 2) + Number.EPSILON) * 10000) / 10000,
+                SuOrdRate: Math.round(((rate * 1.25) + Number.EPSILON) * 100) / 100,
+                SuOTRate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
                 
-                PHOrdRate: Math.round(((rate * 2.25) + Number.EPSILON) * 10000) / 10000,
-                PHOTRate: Math.round(((rate * 2.5) + Number.EPSILON) * 10000) / 10000,
+                PHOrdRate: Math.round(((rate * 2.25) + Number.EPSILON) * 100) / 100,
+                PHOTRate: Math.round(((rate * 2.5) + Number.EPSILON) * 100) / 100,
             }))
         }
         else if(jobType === "Casual" && (awardType === "Level 1" || awardType === "Crew Coach")){
             setState(prevState => ({
               ...prevState,
               rate: rate,
-              MFOrdRate: rate * 1.25,
-              MFLNRate: Math.round((((rate * 1.1) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
-              MFEMRate: Math.round((((rate * 1.15) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
-              MFO1Rate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
-              MFO2Rate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
+              MFOrdRate: Math.round((rate * 1.25 + Number.EPSILON) * 100) / 100,
+              MFLNRate: Math.round((((rate * 1.1) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              MFEMRate: Math.round((((rate * 1.15) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              MFO1Rate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              MFO2Rate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
 
-              SaOrdRate: Math.round((((rate * 1.25) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
-              SaO1Rate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
-              SaO2Rate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
+              SaOrdRate: Math.round((((rate * 1.25) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              SaO1Rate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              SaO2Rate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
         
-              SuOrdRate: Math.round((((rate * 1.25) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
-              SuOTRate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
+              SuOrdRate: Math.round((((rate * 1.25) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              SuOTRate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
               
-              PHOrdRate: Math.round((((rate * 2.25) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
-              PHOTRate: Math.round((((rate * 2.5) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
+              PHOrdRate: Math.round((((rate * 2.25) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              PHOTRate: Math.round((((rate * 2.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
           }))
         }
         else if((jobType === "Full time" || jobType === "Part time") && awardType === "Level 2"){
             setState(prevState => ({
               ...prevState,
               rate: rate,
-              MFOrdRate: rate,
-              MFLNRate: Math.round(((rate * 1.1) + Number.EPSILON) * 10000) / 10000,
-              MFEMRate: Math.round(((rate * 1.15) + Number.EPSILON) * 10000) / 10000,
-              MFO1Rate: Math.round(((rate * 1.5) + Number.EPSILON) * 10000) / 10000,
-              MFO2Rate: Math.round(((rate * 2) + Number.EPSILON) * 10000) / 10000,
+              MFOrdRate: Math.round((rate  + Number.EPSILON) * 100) / 100,
+              MFLNRate: Math.round(((rate * 1.1) + Number.EPSILON) * 100) / 100,
+              MFEMRate: Math.round(((rate * 1.15) + Number.EPSILON) * 100) / 100,
+              MFO1Rate: Math.round(((rate * 1.5) + Number.EPSILON) * 100) / 100,
+              MFO2Rate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
 
-              SaOrdRate: Math.round(((rate * 1.25) + Number.EPSILON) * 10000) / 10000,
-              SaO1Rate: Math.round(((rate * 1.5) + Number.EPSILON) * 10000) / 10000,
-              SaO2Rate: Math.round(((rate * 2) + Number.EPSILON) * 10000) / 10000,
+              SaOrdRate: Math.round(((rate * 1.25) + Number.EPSILON) * 100) / 100,
+              SaO1Rate: Math.round(((rate * 1.5) + Number.EPSILON) * 100) / 100,
+              SaO2Rate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
         
-              SuOrdRate: Math.round(((rate * 1.5) + Number.EPSILON) * 10000) / 10000,
-              SuOTRate: Math.round(((rate * 2) + Number.EPSILON) * 10000) / 10000,
+              SuOrdRate: Math.round(((rate * 1.5) + Number.EPSILON) * 100) / 100,
+              SuOTRate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
               
-              PHOrdRate: Math.round(((rate * 2.25) + Number.EPSILON) * 10000) / 10000,
-              PHOTRate: Math.round(((rate * 2.5) + Number.EPSILON) * 10000) / 10000,
+              PHOrdRate: Math.round(((rate * 2.25) + Number.EPSILON) * 100) / 100,
+              PHOTRate: Math.round(((rate * 2.5) + Number.EPSILON) * 100) / 100,
           }))
         }
         else {
             setState(prevState => ({
               ...prevState,
               rate: rate,
-              MFOrdRate: rate * 1.25,
-              MFLNRate: Math.round((((rate * 1.1) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
-              MFEMRate: Math.round((((rate * 1.15) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
-              MFO1Rate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
-              MFO2Rate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
+              MFOrdRate: Math.round((rate * 1.25 + Number.EPSILON) * 100) / 100,
+              MFLNRate: Math.round((((rate * 1.1) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              MFEMRate: Math.round((((rate * 1.15) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              MFO1Rate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              MFO2Rate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
 
-              SaOrdRate: Math.round((((rate * 1.25) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
-              SaO1Rate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
-              SaO2Rate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
+              SaOrdRate: Math.round((((rate * 1.25) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              SaO1Rate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              SaO2Rate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
         
-              SuOrdRate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
-              SuOTRate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
+              SuOrdRate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              SuOTRate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
               
-              PHOrdRate: Math.round((((rate * 2.25) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
-              PHOTRate: Math.round((((rate * 2.5) + (rate * 0.25)) + Number.EPSILON) * 10000) / 10000,
+              PHOrdRate: Math.round((((rate * 2.25) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              PHOTRate: Math.round((((rate * 2.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
           }))
         }
     }
@@ -210,6 +218,8 @@ function App() {
         setSuTotalDollar( Math.round((totalSuOrdDollars + totalSuOTDollars) * 10000) / 10000 );
         setPHTotalDollar( Math.round((totalPHOrdDollars + totalPHOTDollars) * 10000) / 10000 );
 
+        setTotalHoursWorked( Math.round(calculateTotalHours() * 100) / 100);
+
         if(awardType === "Crew Coach"){
             setCrewCoachAllowance(Math.round((calculateTotalHours() * 0.5) * 100) / 100);
         }
@@ -229,7 +239,6 @@ function App() {
         const totalHours = state.MFOrdHours + state.MFLNHours + state.MFEMHours + state.MFO1Hours + state.MFO2Hours + state.SaOrdHours + state.SaO1Hours + state.SaO2Hours + state.SuOrdHours + state.SuOTHours + state.PHOrdHours + state.PHOTHours;
         const totalMinutes = state.MFOrdMinutes + state.MFLNMinutes + state.MFEMMinutes + state.MFO1Minutes + state.MFO2Minutes + state.SaOrdMinutes + state.SaO1Minutes + state.SaO2Minutes + state.SuOrdMinutes + state.SuOTMinutes + state.PHOrdMinutes + state.PHOTMinutes;
         const totalHoursAndMinutes = minToDecimalCalc(totalHours, totalMinutes);
-        
         return totalHoursAndMinutes
     }
 
@@ -237,7 +246,6 @@ function App() {
         const totalHours = state.MFOrdHours + state.MFLNHours + state.MFEMHours + state.SaOrdHours + state.SuOrdHours + state.PHOrdHours;
         const totalMinutes = state.MFOrdMinutes + state.MFLNMinutes + state.MFEMMinutes + state.SaOrdMinutes + state.SuOrdMinutes + state.PHOrdMinutes;
         const totalOrdinaryHoursAndMinutes = minToDecimalCalc(totalHours, totalMinutes)
-
         return totalOrdinaryHoursAndMinutes
         
     }
@@ -248,10 +256,12 @@ function App() {
             minutes -= 60;
             hours += 1;
         }
-
         hours = hours + (minutes / 60);
-
         return hours;
+    }
+
+    function refreshPage(){
+        window.location.reload();
     }
 
     return (
@@ -325,9 +335,11 @@ function App() {
           </div>
           <div className="totals">
           <button onClick={ displayTotal }>Calculate</button>
+              <p>Total hours worked: { totalHoursWorked }</p>
               <p>Total gross pay: ${ totalGrossPay }</p>
               <p>Crew coach allowance: ${ crewCoachAllowance }</p>
               <p>IFA allowance: ${ IFAAllowance }</p>
+              <button onClick={ refreshPage }>Reset</button>
             </div>
       </div>
   );
