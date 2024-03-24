@@ -167,6 +167,19 @@ function App() {
         setSaTotalDollar( Math.round((totalSaOrdDollars + totalSaO1Dollars + totalSaO2Dollars) * 10000) / 10000) ;
         setSuTotalDollar( Math.round((totalSuOrdDollars + totalSuOTDollars) * 10000) / 10000 );
         setPHTotalDollar( Math.round((totalPHOrdDollars + totalPHOTDollars) * 10000) / 10000 );
+
+        if(awardType === "Crew Coach"){
+            setCrewCoachAllowance(Math.round((calculateTotalHours() * 0.5) * 100) / 100);
+        }
+        calculateTotalHours();
+    }
+
+    function calculateTotalHours(){
+      const totalHours = state.MFOrdHours + state.MFLNHours + state.MFEMHours + state.MFO1Hours + state.MFO2Hours + state.SaOrdHours + state.SaO1Hours + state.SaO2Hours + state.SuOrdHours + state.SuOTHours + state.PHOrdHours + state.PHOTHours;
+      const totalMinutes = state.MFOrdMinutes + state.MFLNMinutes + state.MFEMMinutes + state.MFO1Minutes + state.MFO2Minutes + state.SaOrdMinutes + state.SaO1Minutes + state.SaO2Minutes + state.SuOrdMinutes + state.SuOTMinutes + state.PHOrdMinutes + state.PHOTMinutes;
+      const totalHoursAndMinutes = minToDecimalCalc(totalHours, totalMinutes);
+      
+      return totalHoursAndMinutes
     }
 
     // Convert minutes to decimals
