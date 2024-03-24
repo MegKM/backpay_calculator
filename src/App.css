@@ -1,5 +1,5 @@
-.app {
-  margin: 20px;
+.app{
+  margin: 40px;
 }
 
 input {
@@ -17,4 +17,18 @@ input {
 
 #rate {
   width: 40px;
+}
+
+select {
+  margin: 5px;
+}
+
+button {
+  padding: 5px 10px;
+  border-radius: 10%;
+  background-color: lightblue;
+}
+
+body {
+  background-color: aliceblue;
 }

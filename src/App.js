@@ -92,8 +92,8 @@ function App() {
     // Calculate all pay rates based on base rate
     function updateOrdinaryRate(){
         const rate = parseFloat(state.rate);
-        console.log(jobType)
-        if(jobType === "Full time" || jobType === "Part time"){
+
+        if(jobType === "Full time" || jobType === "Part time" && awardType === "Level 1" || awardType === "Crew coach"){
             setState(prevState => ({
                 ...prevState,
                 rate: rate,
@@ -114,8 +114,7 @@ function App() {
                 PHOTRate: Math.round(((rate * 2.5) + Number.EPSILON) * 100) / 100,
             }))
         }
-        else {
-            console.log("correct one hit")
+        else if(jobType === "Casual" && awardType === "Level 1" || awardType === "Crew coach"){
             setState(prevState => ({
               ...prevState,
               rate: rate,
@@ -130,6 +129,49 @@ function App() {
               SaO2Rate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
         
               SuOrdRate: Math.round((((rate * 1.25) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              SuOTRate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              
+              PHOrdRate: Math.round((((rate * 2.25) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              PHOTRate: Math.round((((rate * 2.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+          }))
+        }
+        else if(jobType === "Full time" || jobType === "Part time" && awardType === "Level 2"){
+            setState(prevState => ({
+              ...prevState,
+              rate: rate,
+              MFOrdRate: rate,
+              MFLNRate: Math.round(((rate * 1.1) + Number.EPSILON) * 100) / 100,
+              MFEMRate: Math.round(((rate * 1.15) + Number.EPSILON) * 100) / 100,
+              MFO1Rate: Math.round(((rate * 1.5) + Number.EPSILON) * 100) / 100,
+              MFO2Rate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
+
+              SaOrdRate: Math.round(((rate * 1.25) + Number.EPSILON) * 100) / 100,
+              SaO1Rate: Math.round(((rate * 1.5) + Number.EPSILON) * 100) / 100,
+              SaO2Rate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
+        
+              SuOrdRate: Math.round(((rate * 1.5) + Number.EPSILON) * 100) / 100,
+              SuOTRate: Math.round(((rate * 2) + Number.EPSILON) * 100) / 100,
+              
+              PHOrdRate: Math.round(((rate * 2.25) + Number.EPSILON) * 100) / 100,
+              PHOTRate: Math.round(((rate * 2.5) + Number.EPSILON) * 100) / 100,
+          }))
+        }
+        else {
+            console.log("hit")
+            setState(prevState => ({
+              ...prevState,
+              rate: rate,
+              MFOrdRate: rate * 1.25,
+              MFLNRate: Math.round((((rate * 1.1) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              MFEMRate: Math.round((((rate * 1.15) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              MFO1Rate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              MFO2Rate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+
+              SaOrdRate: Math.round((((rate * 1.25) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              SaO1Rate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+              SaO2Rate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
+        
+              SuOrdRate: Math.round((((rate * 1.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
               SuOTRate: Math.round((((rate * 2) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
               
               PHOrdRate: Math.round((((rate * 2.25) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
@@ -171,15 +213,33 @@ function App() {
         if(awardType === "Crew Coach"){
             setCrewCoachAllowance(Math.round((calculateTotalHours() * 0.5) * 100) / 100);
         }
-        calculateTotalHours();
+
+        if(awardType === "Level 2"){
+            const totalHours = calculateTotlOrdinaryHours();
+            if(totalHours > 38){
+              setIFAAllowance(Math.round((38 * (state.rate * 0.1)) * 100) / 100);
+            }
+            else{
+              setIFAAllowance(Math.round((totalHours * (state.rate * 0.1)) * 100) / 100);
+            }
+        }
     }
 
     function calculateTotalHours(){
-      const totalHours = state.MFOrdHours + state.MFLNHours + state.MFEMHours + state.MFO1Hours + state.MFO2Hours + state.SaOrdHours + state.SaO1Hours + state.SaO2Hours + state.SuOrdHours + state.SuOTHours + state.PHOrdHours + state.PHOTHours;
-      const totalMinutes = state.MFOrdMinutes + state.MFLNMinutes + state.MFEMMinutes + state.MFO1Minutes + state.MFO2Minutes + state.SaOrdMinutes + state.SaO1Minutes + state.SaO2Minutes + state.SuOrdMinutes + state.SuOTMinutes + state.PHOrdMinutes + state.PHOTMinutes;
-      const totalHoursAndMinutes = minToDecimalCalc(totalHours, totalMinutes);
-      
-      return totalHoursAndMinutes
+        const totalHours = state.MFOrdHours + state.MFLNHours + state.MFEMHours + state.MFO1Hours + state.MFO2Hours + state.SaOrdHours + state.SaO1Hours + state.SaO2Hours + state.SuOrdHours + state.SuOTHours + state.PHOrdHours + state.PHOTHours;
+        const totalMinutes = state.MFOrdMinutes + state.MFLNMinutes + state.MFEMMinutes + state.MFO1Minutes + state.MFO2Minutes + state.SaOrdMinutes + state.SaO1Minutes + state.SaO2Minutes + state.SuOrdMinutes + state.SuOTMinutes + state.PHOrdMinutes + state.PHOTMinutes;
+        const totalHoursAndMinutes = minToDecimalCalc(totalHours, totalMinutes);
+        
+        return totalHoursAndMinutes
+    }
+
+    function calculateTotlOrdinaryHours(){
+        const totalHours = state.MFOrdHours + state.MFLNHours + state.MFEMHours + state.SaOrdHours + state.SuOrdHours + state.PHOrdHours;
+        const totalMinutes = state.MFOrdMinutes + state.MFLNMinutes + state.MFEMMinutes + state.SaOrdMinutes + state.SuOrdMinutes + state.PHOrdMinutes;
+        const totalOrdinaryHoursAndMinutes = minToDecimalCalc(totalHours, totalMinutes)
+
+        return totalOrdinaryHoursAndMinutes
+        
     }
 
     // Convert minutes to decimals
@@ -211,71 +271,64 @@ function App() {
           <button onClick={ updateOrdinaryRate }>Submit</button>
           <div className="container">
             <div className="MF">
-                <p>Monday - Friday</p>
-                  <p>Ordinary - ${ state.MFOrdRate }</p>
+                <h2>Monday - Friday</h2>
+                  <h4>Ordinary - ${ state.MFOrdRate }</h4>
                     <label>Hrs</label><input name="MFOrdHours" onChange={ handleInputChange }></input> 
                     <label>Min</label><input name="MFOrdMinutes" onChange={ handleInputChange }></input> 
-                  <p>Late Night - ${ state.MFLNRate }</p>
+                  <h4>Late Night - ${ state.MFLNRate }</h4>
                     <label>Hrs</label><input name="MFLNHours" onChange={ handleInputChange }></input> 
                     <label>Min</label><input name="MFLNMinutes" onChange={ handleInputChange}></input> 
-                  <p>Early Morning - ${ state.MFEMRate }</p>
+                  <h4>Early Morning - ${ state.MFEMRate }</h4>
                     <label>Hrs</label><input name="MFEMHours" onChange={ handleInputChange }></input> 
                     <label>Min</label><input name="MFEMMinutes" onChange={ handleInputChange }></input>  
-                  <p>Overtime 1 - ${ state.MFO1Rate }</p>
+                  <h4>Overtime 1 - ${ state.MFO1Rate }</h4>
                     <label>Hrs</label><input name="MFO1Hours" onChange={ handleInputChange }></input> 
                     <label>Min</label><input name="MFO1Minutes" onChange={ handleInputChange }></input> 
-                  <p>Overtime 2 - $ { state.MFO2Rate }</p>
+                  <h4>Overtime 2 - $ { state.MFO2Rate }</h4>
                     <label>Hrs</label><input name="MFO2Hours" onChange={ handleInputChange }></input>
                     <label>Min</label><input name="MFO2Minutes" onChange={ handleInputChange }></input> 
-                  <br></br><button onClick={ displayTotal }>Calculate</button>
-                  <p>Total <span id="MF_total_hrs"></span>:<span id="MF_total_min"></span></p>
-                  <p>${ MFTotalDollar }</p>
+                  <p>Total M-F: ${ MFTotalDollar }</p>
               </div>
             <div className="Sat">
-                <p>Saturday</p>
-                  <p>Ordinary - ${ state.SaOrdRate }</p>
+                <h2>Saturday</h2>
+                  <h4>Ordinary - ${ state.SaOrdRate }</h4>
                     <label>Hrs</label><input name="SaOrdHours" onChange={ handleInputChange }></input> 
                     <label>Min</label><input name="SaOrdMinutes" onChange={ handleInputChange }></input> 
-                  <p>Overtime 1 - ${ state.SaO1Rate }</p>
+                  <h4>Overtime 1 - ${ state.SaO1Rate }</h4>
                     <label>Hrs</label><input name="SaO1Hours" onChange={ handleInputChange }></input> 
                     <label>Min</label><input name="SaO1Minutes"></input> 
-                  <p>Overtime 2 - ${ state.SaO2Rate }</p>
+                  <h4>Overtime 2 - ${ state.SaO2Rate }</h4>
                     <label>Hrs</label><input name="SaO2Hours" onChange={ handleInputChange }></input>
                     <label>Min</label><input name="SaO2Minutes" onChange={ handleInputChange }></input> 
-                    <br></br><button onClick={ displayTotal }>Calculate</button>
-                    <p>Total <span id="Sa_total_hrs"></span>:<span id="Sa_total_min"></span></p>
-                    <p>${ SaTotalDollar }</p>
+                    <p>Total Sat: ${ SaTotalDollar }</p>
             </div>
             <div className="Sun">
-                <p>Sunday</p>
-                  <p>Ordinary - ${ state.SuOrdRate }</p>
+                <h2>Sunday</h2>
+                  <h4>Ordinary - ${ state.SuOrdRate }</h4>
                     <label>Hrs</label><input name="SuOrdHours" onChange={ handleInputChange }></input> 
                     <label>Min</label><input name="SuOrdMinutes" onChange={ handleInputChange }></input> 
-                  <p>Overtime - ${ state.SuOTRate }</p>
+                  <h4>Overtime - ${ state.SuOTRate }</h4>
                     <label>Hrs</label><input name="SuOTHours" onChange={ handleInputChange }></input> 
                     <label>Min</label><input name="SuOTMinutes" onChange={ handleInputChange }></input> 
-                    <br></br><button onClick={ displayTotal }>Calculate</button>
-                    <p>Total <span id="Su_total_hrs"></span>:<span id="Su_total_min"></span></p>
-                    <p>${ SuTotalDollar }</p>
+                    <p>Total Sun: ${ SuTotalDollar }</p>
             </div>
             <div className="PH">
-                <p>Public Holiday</p>
-                  <p>Ordinary - ${ state.PHOrdRate }</p>
+                <h2>Public Holiday</h2>
+                  <h4>Ordinary - ${ state.PHOrdRate }</h4>
                     <label>Hrs</label><input name="PHOrdHours" onChange={ handleInputChange }></input> 
                     <label>Min</label><input name="PHOrdMinutes" onChange={ handleInputChange }></input> 
-                  <p>Overtime - ${ state.PHOTRate }</p>
+                  <h4>Overtime - ${ state.PHOTRate }</h4>
                     <label>Hrs</label><input name="PHOTHours" onChange={ handleInputChange }></input>
                     <label>Min</label><input name="PHOTMinutes" onChange={ handleInputChange }></input> 
-                    <br></br><button onClick={ displayTotal }>Calculate</button>
-                    <p>Total <span id="PH_total_hrs"></span>:<span id="PH_total_min"></span></p>
-                    <p>${ PHTotalDollar }</p>
+                    <p>Total PH: ${ PHTotalDollar }</p>
             </div>
-            <div>
+          </div>
+          <div className="totals">
+          <button onClick={ displayTotal }>Calculate</button>
               <p>Total gross pay: ${ totalGrossPay }</p>
               <p>Crew coach allowance: ${ crewCoachAllowance }</p>
               <p>IFA allowance: ${ IFAAllowance }</p>
             </div>
-          </div>
       </div>
   );
 }
