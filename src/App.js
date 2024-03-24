@@ -93,7 +93,7 @@ function App() {
     function updateOrdinaryRate(){
         const rate = parseFloat(state.rate);
 
-        if(jobType === "Full time" || jobType === "Part time" && awardType === "Level 1" || awardType === "Crew coach"){
+        if((jobType === "Full time" || jobType === "Part time") && (awardType === "Level 1" || awardType === "Crew coach")){
             setState(prevState => ({
                 ...prevState,
                 rate: rate,
@@ -114,7 +114,7 @@ function App() {
                 PHOTRate: Math.round(((rate * 2.5) + Number.EPSILON) * 100) / 100,
             }))
         }
-        else if(jobType === "Casual" && awardType === "Level 1" || awardType === "Crew coach"){
+        else if(jobType === "Casual" && (awardType === "Level 1" || awardType === "Crew coach")){
             setState(prevState => ({
               ...prevState,
               rate: rate,
@@ -135,7 +135,7 @@ function App() {
               PHOTRate: Math.round((((rate * 2.5) + (rate * 0.25)) + Number.EPSILON) * 100) / 100,
           }))
         }
-        else if(jobType === "Full time" || jobType === "Part time" && awardType === "Level 2"){
+        else if((jobType === "Full time" || jobType === "Part time") && awardType === "Level 2"){
             setState(prevState => ({
               ...prevState,
               rate: rate,
