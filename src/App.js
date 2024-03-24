@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
+    // State variables
     const initialState = {
       rate: 0,
       MFOrdRate: 0,
@@ -52,7 +53,7 @@ function App() {
     // Set initial states
     const [state, setState] = useState(initialState);
 
-    // Set state for total dollar amounts
+    // Set state for total amounts
     const [ MFTotalDollar, setMFTotalDollar ] = useState(0);
     const [ SaTotalDollar, setSaTotalDollar ] = useState(0);
     const [ SuTotalDollar, setSuTotalDollar ] = useState(0);
@@ -89,6 +90,7 @@ function App() {
           rate: parseFloat(event.target.value)}))
     }
 
+    // Handle job type selections
     function handleJobTypeSelection(event){
         setJobType(event.target.value)
     }
@@ -97,7 +99,7 @@ function App() {
         setAwardType(event.target.value)
     }
 
-    // Calculate all pay rates based on base rate
+    // Calculate all pay rates based on base rate and job type
     function updateOrdinaryRate(){
         const rate = parseFloat(state.rate);
 
@@ -195,7 +197,7 @@ function App() {
         );
     }, [MFTotalDollar, SaTotalDollar, SuTotalDollar, PHTotalDollar]);
     
-    // Mulitple inputted hours by applicable hourly rate
+    // Multiply inputted hours by applicable hourly rate
     function displayTotal(){
         const totalMFOrdDollars = state.MFOrdRate * minToDecimalCalc(state.MFOrdHours, state.MFOrdMinutes);
         const totalMFLNDollars = state.MFLNRate * minToDecimalCalc(state.MFLNHours, state.MFLNMinutes);
@@ -260,6 +262,7 @@ function App() {
         return hours;
     }
 
+    // Reset button
     function refreshPage(){
         window.location.reload();
     }
