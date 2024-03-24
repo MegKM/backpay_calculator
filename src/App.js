@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
@@ -49,60 +48,18 @@ function App() {
       PHOTHours: 0,
       PHOTMinutes: 0,
     };
-    // Base rate
+
+    // Set initial states
     const [state, setState] = useState(initialState);
 
-    // // Weekday rates
-    // const [ MFOrdRate, setMFOrdRate ] = useState(0);
-    // const [ MFLNRate, setMFLNRate ] = useState(0);
-    // const [ MFEMRate, setMFEMRate ] = useState(0);
-    // const [ MFO1Rate, setMFO1Rate ] = useState(0);
-    // const [ MFO2Rate, setMFO2Rate ] = useState(0);
-
-    // //Saturday rates
-    // const [ SaOrdRate, setSaOrdRate ] = useState(0);
-    // const [ SaLNRate, setSaLNRate ] = useState(0);
-    // const [ SaEMRate, setSaEMRate ] = useState(0);
-    // const [ SaO1Rate, setSaO1Rate ] = useState(0);
-    // const [ SaO2Rate, setSaO2Rate ] = useState(0);
-  
-    // //Sunday rates
-    // const [ SuOrdRate, setSuOrdRate ] = useState(0);
-    // const [ SuLNRate, setSuLNRate ] = useState(0);
-    // const [ SuEMRate, setSuEMRate ] = useState(0);
-    // const [ SuO1Rate, setSuO1Rate ] = useState(0);
-    // const [ SuO2Rate, setSuO2Rate ] = useState(0);
-
-    // //Public Holiday rates
-    // const [ PHOrdRate, setPHOrdRate ] = useState(0);
-    // const [ PHLNRate, setPHLNRate ] = useState(0);
-    // const [ PHEMRate, setPHEMRate ] = useState(0);
-    // const [ PHO1Rate, setPHO1Rate ] = useState(0);
-    // const [ PHO2Rate, setPHO2Rate ] = useState(0);
-
-    // // Weekday hours and minutes
-    // const [ MFOrdHours, setMFOrdHours ] = useState(0);
-    // const [ MFOrdMinutes, setMFOrdMinutes ] = useState(0);
-
-    // const [ MFLNHours, setMFLNHours ] = useState(0);
-    // const [ MFLNMinutes, setMFLNMinutes ] = useState(0);
-
-    // const [ MFEMHours, setMFEMHours ] = useState(0);
-    // const [ MFEMMinutes, setMFEMMinutes ] = useState(0);
-
-    // const [ MFO1Hours, setMFO1Hours ] = useState(0);
-    // const [ MFO1Minutes, setMFO1Minutes ] = useState(0);
-
-    // const [ MFO2Hours, setMFO2Hours ] = useState(0);
-    // const [ MFO2Minutes, setMFO2Minutes ] = useState(0);
-
-    // Weekday total dollars
+    // Set state for total dollar amounts
     const [ MFTotalDollar, setMFTotalDollar ] = useState(0);
     const [ SaTotalDollar, setSaTotalDollar ] = useState(0);
     const [ SuTotalDollar, setSuTotalDollar ] = useState(0);
     const [ PHTotalDollar, setPHTotalDollar ] = useState(0);
     const [ totalGrossPay, setTotalGrossPay ] = useState(0);
 
+    // Handle hours and minutes being added
     function handleInputChange(event){
       const { name, value } = event.target;
       setState(prevState => ({
@@ -111,12 +68,14 @@ function App() {
       ));
     }
 
+    // Handle base rate being added
     function handleRateChange(event){
         setState(prevState => ({
           ...prevState,
           rate: parseFloat(event.target.value)}))
     }
 
+    // Calculate all pay rates based on base rate
     function updateOrdinaryRate(){
         const rate = parseFloat(state.rate);
         setState(prevState => ({
@@ -140,12 +99,14 @@ function App() {
         }))
     }
 
+    // Update total for the week *after* the group totals have been calculated
     useEffect(() => {
         setTotalGrossPay(
           Math.round((MFTotalDollar + SaTotalDollar + SuTotalDollar + PHTotalDollar) * 100) / 100
         );
     }, [MFTotalDollar, SaTotalDollar, SuTotalDollar, PHTotalDollar]);
     
+    // Mulitple inputted hours by applicable hourly rate
     function displayTotal(){
         const totalMFOrdDollars = state.MFOrdRate * minToDecimalCalc(state.MFOrdHours, state.MFOrdMinutes);
         const totalMFLNDollars = state.MFLNRate * minToDecimalCalc(state.MFLNHours, state.MFLNMinutes);
@@ -169,6 +130,7 @@ function App() {
         setPHTotalDollar( Math.round((totalPHOrdDollars + totalPHOTDollars) * 10000) / 10000 );
     }
 
+    // Convert minutes to decimals
     function minToDecimalCalc(hours, minutes){
         while(minutes > 60){
             minutes -= 60;
